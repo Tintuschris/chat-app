@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Chat App</title>
+    <style>
+          #chat-window {
+        background-color: #2e7d32;
+        height: 400px;
+        width: 500px;
+        border: 1px solid black;
+        overflow-y: scroll;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #message {
+        width: 80%;
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 5px;
+        border: 1px solid gray;
+      }
+
+      #send-button {
+        background-color: #2e7d32;
+        color: white;
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat-window"></div>
+    <input type="text" id="message">
+    <button id="send-button">Send</button>
+    <script>
+      const socket = new WebSocket("ws://localhost:3000");
+      const chatWindow = document.getElementById("chat-window");
+      const messageInput = document.getElementById("message");
+      const sendButton = document.getElementById("send-button");
+
+      sendButton.addEventListener("click", () => {
+        socket.send(messageInput.value);
+        messageInput.value = "";
+      });
+        socket.onmessage = (event) => {
+        const p = document.createElement("p");
+        event.data.text().then((message) => {
+        p.innerText = message;
+        chatWindow.appendChild(p);
+        });
+        };
+
+    </script>
+  </body>
+</html>
